@@ -15,7 +15,9 @@ def read_positions(csv_path: str, limit: int | None = None) -> Tuple[List[str], 
     The input file contains a few metadata lines before the actual header.
     The data rows provide a `Ticker` column and a `Mkt Val` column representing
     the dollar exposure of each position.  We ignore the other columns and
-    convert the exposures to floats.
+    convert the exposures to floats.  Cash lines reported with ticker ``USD``
+    and long name ``US DOLLAR`` are skipped so they don't collide with the
+    ProShares Ultra Semiconductors ETF, which also uses ticker ``USD``.
     """
 
     tickers: List[str] = []
@@ -35,7 +37,15 @@ def read_positions(csv_path: str, limit: int | None = None) -> Tuple[List[str], 
             if not row or len(row) < 8:
                 continue
 
+            long_name = row[0].strip()
             ticker = row[7].strip()
+            # Some custodians report cash as a position with ticker "USD".
+            # That clashes with the ticker for the ProShares Ultra Semiconductors ETF
+            # (also "USD"). If the row represents the actual currency position,
+            # identified by the long name "US DOLLAR", skip it.
+            if ticker.upper() == "USD" and long_name.upper() == "US DOLLAR":
+                continue
+
             exposure_str = row[6].replace(",", "").strip()
             try:
                 exposure = float(exposure_str)
