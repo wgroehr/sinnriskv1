@@ -7,7 +7,7 @@ def calculate_portfolio_metrics(filename):
     df = pd.read_csv(filename, skiprows=3)
     
     # Calculate DV01 for each bond
-    df['DV01'] = df['Px Close'] * df['OAD'] * 0.0001
+    df['DV01'] = df(abs(['Px Close'] * df['OAD'] * 0.0001))
     
     # Portfolio-level calculations
     total_portfolio_value = df['Px Close'].sum()
