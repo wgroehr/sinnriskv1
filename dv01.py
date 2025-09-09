@@ -13,12 +13,14 @@ def calculate_portfolio_metrics(filename):
     total_portfolio_value = df['Px Close'].sum()
     total_portfolio_dv01 = df['DV01'].sum()
     portfolio_duration = total_portfolio_dv01 / (total_portfolio_value * 0.0001)
+    avg_convexity = df['Convex to Mty'].mean()
     
     # Print results
     print(f"Total Portfolio Value: ${total_portfolio_value:,.2f}")
     print(f"Total Portfolio DV01: ${total_portfolio_dv01:.2f}")
-    print(f"Portfolio Duration: {portfolio_duration:.2f} years")
+    print(f"Portfolio Duration: {portfolio_duration:.2f} ")
     print(f"Number of Securities: {len(df)}")
+    print(f"Average Convexity: {avg_convexity: .2f}")
     
     return df
 
