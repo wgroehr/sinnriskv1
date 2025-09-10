@@ -7,12 +7,15 @@ def calculate_portfolio_metrics(filename):
     df = pd.read_csv(filename, skiprows=3)
     
     # Calculate DV01 for each bond 
-    df['DV01'] = df ['Px Close'] * df['OAD'] * 0.0001
+    df['DV01'] = df ['Pos'] * df['Modified OA Duration'] * 0.0001
     # Portfolio-level calculations
-    total_portfolio_value = df['Px Close'].sum()
+    total_portfolio_value = df['Pos'].sum()
     total_portfolio_dv01 = df['DV01'].sum()
     portfolio_duration = total_portfolio_dv01 / (total_portfolio_value * 0.0001)
     avg_convexity = df['Convex to Mty'].mean()
+    #add position size with "Position" field
+    #// total_portfolio_value = (df['Px Close'] * df['Position']).sum()
+    #//     df['DV01'] = df ['Px Close'] * df['OAD'] * 0.0001 * df['Position']
     
     # Print results
     print(f"Total Portfolio Value: ${total_portfolio_value:,.2f}")
